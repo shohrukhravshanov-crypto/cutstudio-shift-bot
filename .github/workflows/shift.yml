@@ -25,7 +25,7 @@ jobs:
             exit 1
           fi
 
-          if [ "$EVENT_NAME" = "push" ]; then
+          if [ "$EVENT_NAME" = "push" ] || [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             MESSAGE=$(printf 'Привет')
           elif [ "$SCHEDULE" = "45 4 * * *" ]; then
             MESSAGE=$(printf 'Доброе утро!☺️\nНаша смена началась.\nЗаказы принимаем до 21:30 (19:30 по мск).\nМожете написать по поводу заказа в @CutStudiorg.')

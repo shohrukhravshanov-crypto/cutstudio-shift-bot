@@ -3,6 +3,7 @@ name: CutStudio Shift Bot
 on:
   schedule:
     - cron: "45 4 * * *"
+    - cron: "0 7 * * *"
     - cron: "30 16 * * *"
   workflow_dispatch:
 
@@ -23,8 +24,14 @@ jobs:
 
           if [ "$SCHEDULE" = "45 4 * * *" ]; then
             MESSAGE=$(printf 'Доброе утро!☺️\nНаша смена началась.\nЗаказы принимаем до 21:30 (19:30 по мск).\nМожете написать по поводу заказа в @CutStudiorg.')
+          elif [ "$SCHEDULE" = "0 7 * * *" ]; then
+            MESSAGE=$(printf 'Середина дня наступила!\nЖду первый заказ за день!')
           else
             MESSAGE=$(printf 'Добрый вечер.\nНаша смена закончилась.\nНа все вопросы, заданные ночью мы ответим завтра.')
           fi
 
-          curl --fail --silent --show-error             --request POST             --data-urlencode "chat_id=$CHANNEL"             --data-urlencode "text=$MESSAGE"             "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+          curl --fail --silent --show-error \
+            --request POST \
+            --data-urlencode "chat_id=$CHANNEL" \
+            --data-urlencode "text=$MESSAGE" \
+            "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"

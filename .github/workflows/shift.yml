@@ -1,6 +1,7 @@
 name: CutStudio Shift Bot
 
 on:
+  push:
   schedule:
     - cron: "45 4 * * *"
     - cron: "30 16 * * *"

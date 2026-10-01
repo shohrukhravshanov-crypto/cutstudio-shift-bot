@@ -5,7 +5,6 @@ on:
   schedule:
     - cron: "45 4 * * *"
     - cron: "5 5 * * *"
-    - cron: "0 7 * * *"
     - cron: "30 16 * * *"
   workflow_dispatch:
 
@@ -31,8 +30,6 @@ jobs:
             MESSAGE=$(printf 'Доброе утро!☺️\nНаша смена началась.\nЗаказы принимаем до 21:30 (19:30 по мск).\nМожете написать по поводу заказа в @CutStudiorg.')
           elif [ "$SCHEDULE" = "5 5 * * *" ]; then
             MESSAGE=$(printf 'Привет')
-          elif [ "$SCHEDULE" = "0 7 * * *" ]; then
-            MESSAGE=$(printf 'Середина дня наступила!\nЖду первый заказ за день!')
           else
             MESSAGE=$(printf 'Добрый вечер.\nНаша смена закончилась.\nНа все вопросы, заданные ночью мы ответим завтра.')
           fi

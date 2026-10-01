@@ -11,7 +11,26 @@ jobs:
   send-shift-message:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Telegram message
+      - name: Test Telegram access on push
+        if: github.event_name == 'push'
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHANNEL: ${{ secrets.CHANNEL }}
+        run: |
+          if [ -z "$BOT_TOKEN" ] || [ -z "$CHANNEL" ]; then
+            echo "BOT_TOKEN or CHANNEL secret is missing."
+            exit 1
+          fi
+
+          echo "Checking bot token..."
+          curl --fail --silent --show-error             --request GET             "https://api.telegram.org/bot$BOT_TOKEN/getMe"
+
+          echo
+          echo "Checking channel access..."
+          curl --fail --silent --show-error             --request GET             --data-urlencode "chat_id=$CHANNEL"             "https://api.telegram.org/bot$BOT_TOKEN/getChat"
+
+      - name: Send scheduled Telegram message
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHANNEL: ${{ secrets.CHANNEL }}
@@ -28,8 +47,4 @@ jobs:
             MESSAGE=$(printf 'Добрый вечер.\nНаша смена закончилась.\nНа все вопросы, заданные ночью мы ответим завтра.')
           fi
 
-          curl --fail --silent --show-error \
-            --request POST \
-            --data-urlencode "chat_id=$CHANNEL" \
-            --data-urlencode "text=$MESSAGE" \
-            "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+          curl --fail --silent --show-error             --request POST             --data-urlencode "chat_id=$CHANNEL"             --data-urlencode "text=$MESSAGE"             "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"

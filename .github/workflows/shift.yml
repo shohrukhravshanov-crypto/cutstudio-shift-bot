@@ -1,7 +1,6 @@
 name: CutStudio Shift Bot
 
 on:
-  push:
   schedule:
     - cron: "45 4 * * *"
     - cron: "30 16 * * *"
@@ -11,26 +10,7 @@ jobs:
   send-shift-message:
     runs-on: ubuntu-latest
     steps:
-      - name: Test Telegram access on push
-        if: github.event_name == 'push'
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          CHANNEL: ${{ secrets.CHANNEL }}
-        run: |
-          if [ -z "$BOT_TOKEN" ] || [ -z "$CHANNEL" ]; then
-            echo "BOT_TOKEN or CHANNEL secret is missing."
-            exit 1
-          fi
-
-          echo "Checking bot token..."
-          curl --fail --silent --show-error             --request GET             "https://api.telegram.org/bot$BOT_TOKEN/getMe"
-
-          echo
-          echo "Checking channel access..."
-          curl --fail --silent --show-error             --request GET             --data-urlencode "chat_id=$CHANNEL"             "https://api.telegram.org/bot$BOT_TOKEN/getChat"
-
-      - name: Send scheduled Telegram message
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+      - name: Send Telegram message
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHANNEL: ${{ secrets.CHANNEL }}
